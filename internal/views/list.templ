@@ -1,0 +1,32 @@
+package views
+
+import "github.com/infinage/pastebin/pkg"
+
+templ List(models []paste.Model) {
+    <table>
+        <caption>Public Pastes (#{len(models)} Entries)</caption>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Expiry</th>
+                <th colspan="2">Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+        for _, m := range models {
+            <tr>
+            <td>{m.Id}</td>
+            <td>{m.ExpireAt.Format("2006-01-02 15:04:05")}</td>
+            <td hx-target="main" hx-push-url="true" hx-get={"/paste/" + m.Id}>✏️</td>
+            <td hx-target="main" hx-delete={"/paste/" + m.Id} hx-confirm="Are you sure you want to delete this entry?">❌</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+templ AddEntryBtn() {
+    <button hx-target="main" hx-get="/paste" type="button" hx-push-url="true">
+        Add Entry
+    </button>
+}

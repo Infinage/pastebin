@@ -9,7 +9,7 @@ import (
 type Visibility int
 
 const (
-	VisibilityPublic Visibility = iota
+	VisibilityPublic Visibility = iota + 1
 	VisibilityUnlisted
 )
 

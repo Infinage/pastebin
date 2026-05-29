@@ -1,0 +1,48 @@
+package views
+
+import "github.com/infinage/pastebin/pkg"
+
+templ Form(model paste.Model, isInsert bool) {
+    <form 
+        if isInsert { 
+            hx-post="/paste"
+        }
+    >
+    <textarea name="content" id="content" placeholder="Paste content here..." rows="10" cols="50">{model.Content}</textarea>
+    <br>
+
+    <label for="visibility">Choose visibility:</label>
+    <select name="visibility" id="visibility">
+    <option value="0" disabled hidden selected?={model.Visibility == 0}>-- Select an option --</option>
+    <option value="1" selected?={model.Visibility == 1}>Public</option>
+    <option value="2" selected?={model.Visibility == 2}>Unlisted</option>
+    </select>
+    <br>
+
+    <label for="expiry">Choose expiry:</label>
+    <select name="expiry" id="expiry">
+    <option value="" disabled hidden selected>-- Select an option --</option>
+    <option value={10}>10 Minutes</option>
+    <option value={60}>1 Hour</option>
+    <option value={60 * 24}>1 Day</option>
+    <option value={60 * 24 * 7}>1 Week</option>
+    <option value={60 * 24 * 30}>1 Month</option>
+    <option value={60 * 24 * 365}>1 Year</option>
+    </select>
+    <br>
+
+    if isInsert {
+        <button type="reset">Clear</button>
+        <button type="submit">Submit</button>
+    } else {
+        <button 
+            type="button" hx-delete={"/paste/" + model.Id} 
+            hx-confirm="Are you sure you want to delete this entry?"
+        >
+            Delete
+        </button>
+        <button type="button" hx-put={"/paste/" + model.Id}>Update</button>
+    }
+
+    </form>
+}

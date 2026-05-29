@@ -1,0 +1,21 @@
+package views
+
+var htmxHandler = templ.NewOnceHandle()
+
+templ Layout() {
+    <!DOCTYPE html>    
+    <html>
+    <head>
+        <title>PasteBin</title>
+        @htmxHandler.Once(){ <script src="/assets/js/htmx.min.js"></script> }
+    </head>
+    <body>
+        <header>
+        <button hx-target="main" type="button" hx-get="/" hx-push-url="true">🏠</button>
+        </header>
+        <main>
+            { children... }
+        </main>
+    </body>
+    </html>
+}
