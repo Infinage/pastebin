@@ -57,7 +57,7 @@ func Layout() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</head><body><header><button hx-target=\"main\" type=\"button\" hx-get=\"/\" hx-push-url=\"true\">🏠</button></header><main>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<link href=\"/assets/css/index.css\" rel=\"stylesheet\"></head><body><header><button hx-target=\"main\" type=\"button\" hx-get=\"/\" hx-push-url=\"true\">🏠</button></header><main>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

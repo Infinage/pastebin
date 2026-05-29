@@ -27,7 +27,7 @@ func NewApplication(assets embed.FS) *Application {
 
 // Periodically cleanup store and remove stale entries
 func (app *Application) Serve(addr string) error {
-	go app.startBGJobs(5)
+	go app.startBGJobs(30)
 
 	mux := app.routes()
 	server := &http.Server{Addr: addr, Handler: mux}
@@ -48,7 +48,7 @@ func (app *Application) Serve(addr string) error {
 	})
 
 	err := server.ListenAndServe()
-	if err != nil {
+	if err != nil && err != http.ErrServerClosed {
 		return err
 	}
 
