@@ -97,7 +97,7 @@ func TestStore(t *testing.T) {
 
 		s := NewEmptyStore()
 		id1 := s.Insert("abc", time.Minute*10, VisibilityPublic)
-		id2 := s.Insert("xyz", time.Minute*30, VisibilityPublic)
+		id2 := s.Insert("xyz", time.Minute*30, VisibilityUnlisted)
 
 		if err := s.Dump(savepath); err != nil {
 			t.Fatalf("Dumping contents failed, %v", err)
@@ -110,8 +110,21 @@ func TestStore(t *testing.T) {
 		futureTime := time.Now().Add(time.Minute * 15)
 		if _, ok := s.get(id1, futureTime); ok {
 			t.Error("Expected get 'abc' to return false, expiry not persisted across writes")
-		} else if _, ok := s.get(id2, futureTime); !ok {
-			t.Error("Expected get 'def' to return true, expiry not persisted across writes")
+		} else if m, ok := s.get(id2, futureTime); !ok || m.Content != "xyz" || m.Visibility != VisibilityUnlisted {
+			t.Error("Fields not persisted across writes")
+		}
+	})
+
+	t.Run("ListPublic only returns public pastes", func(t *testing.T) {
+		s := NewEmptyStore()
+		s.Insert("xyz", time.Minute*10, VisibilityUnlisted)
+		pid := s.Insert("abc", time.Minute*10, VisibilityPublic)
+
+		publicPastes := s.ListPublic()
+		if size := len(publicPastes); size != 1 {
+			t.Errorf("Expected exactly 1 entry from ListPublic, found %v", size)
+		} else if pst := publicPastes[0]; pst.Id != pid || pst.Visibility != VisibilityPublic {
+			t.Error("Returned entry doesn't match expected")
 		}
 	})
 }

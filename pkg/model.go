@@ -14,6 +14,7 @@ const (
 )
 
 type Model struct {
+	Id         string
 	Content    string
 	ExpireAt   time.Time
 	Visibility Visibility

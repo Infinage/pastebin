@@ -37,7 +37,7 @@ func NewStore(filename string) (*Store, error) {
 func (s *Store) Insert(content string, expiry time.Duration, visibility Visibility) string {
 	id := GetID(content)
 	expireAt := time.Now().Add(expiry)
-	model := &Model{Content: content, ExpireAt: expireAt, Visibility: visibility}
+	model := &Model{Id: id, Content: content, ExpireAt: expireAt, Visibility: visibility}
 
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -91,6 +91,20 @@ func (s *Store) Dump(filename string) error {
 	}
 
 	return nil
+}
+
+// Returns a slice of all public pastes, unlisted ones are ignored
+func (s *Store) ListPublic() []Model {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	var res []Model
+	for _, m := range s.data {
+		if m.Visibility == VisibilityPublic {
+			res = append(res, *m)
+		}
+	}
+	return res
 }
 
 // ---- Helpers for Get and Cleanup for easy test mocking ---- //
